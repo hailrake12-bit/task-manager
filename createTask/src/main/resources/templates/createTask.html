@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task-Manager</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+</head>
+<body>
+<h1>THIS IS A CREATE TASK PAGE</h1>
+<form method="POST" th:action="@{/task}" th:object="${task}">
+    <div class = "grid">
+        <h3>Enter the task name</h3>
+            <div>
+                <label>Name: </label>
+                <input class="input" type="text" th:field="*{name}"/>
+                <span class="validationError"
+                      th:if="${#fields.hasErrors('name')}"
+                      th:errors="*{name}"
+                      >Name Error</span>
+            </div>
+        <h3>Enter the task description</h3>
+            <div>
+                <label>Description:</label>
+                <textarea class="input" type="text" th:field="*{description}" rows="4", cols="50"/>
+            </div>
+    </div>
+    <br>
+    <div>
+        <input type="submit" value="Create Task"/>
+    </div>
+</form>
+
+</body>
+</html>
