@@ -1,0 +1,72 @@
+/* body styles */
+body {
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 10vh;
+
+}
+
+/* form styles */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 60%;
+}
+
+
+/* Headers */
+h1 {
+    font-size: 2em;
+    color: #2d3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+h3 {
+    font-size: 1.5em;
+    color: #2d3e50;
+    margin-bottom: 10px;
+}
+
+/*Input style*/
+.input{
+    width: 95%;
+    padding: 5px;
+    margin-bottom: 1px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 20px;
+    font-family: 'Arial', sans-serif;
+    resize: none;
+}
+
+/* Button Style */
+input[type="submit"] {
+    background-color: #2d3e50;
+    color: white;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Error style */
+.validationError{
+    color: red; /* Изменение цвета текста ошибки */
+    font-weight: bold; /* Сделать текст жирным (по желанию) */
+    display: block;
+}
+
+
+
+
+
+

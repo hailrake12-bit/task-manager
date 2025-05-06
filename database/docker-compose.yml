@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  task-manage-db:
+    image: postgres:16
+    container_name: task_manager_db
+    environment:
+      POSTGRES_DB: task-manager
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - task_manage_data:/var/lib/postgresql/data
+  registration-db:
+    image: postgres:16
+    container_name: registration
+    environment:
+      POSTGRES_DB: registration
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+    volumes:
+      - registration_data:/var/lib/postgresql/data
+
+volumes:
+  task_manage_data:
+  registration_data:

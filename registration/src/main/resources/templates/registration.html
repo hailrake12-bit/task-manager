@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Task-Manager</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+</head>
+<body>
+<h1>Registration</h1>
+<form method="POST" th:action="@{/register}" th:object="${registerForm}">
+    <div class = "grid">
+        <div>
+            <label>Username: </label>
+            <input class="input" type="text" th:field="*{username}"/>
+            <span class="validationError"
+                  th:if="${#fields.hasErrors('username')}"
+                  th:errors="*{username}"
+            >Name Error</span>
+        </div>
+        <div>
+            <label>Password: </label>
+            <input class="input" type="password" th:field="*{password}"/><br/>
+            <span class="validationError"
+                  th:if="${#fields.hasErrors('password')}"
+                  th:errors="*{password}"
+            >Name Error</span>
+        </div>
+        <div>
+            <label>Password: </label>
+            <input class="input" type="password" th:field="*{confirmation}"/><br/>
+            <span class="validationError"
+                  th:if="${#fields.hasAnyErrors()}"
+                  th:each="err : ${#fields.allErrors()}" th:text="${err}"
+            >Name Error</span>
+
+        <div/>
+        <input type="submit" value="Register"/>
+    </div>
+    </div>
+</form>
+</body>
+</html>
