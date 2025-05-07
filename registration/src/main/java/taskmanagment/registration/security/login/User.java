@@ -1,4 +1,4 @@
-package taskmanagment.registration;
+package taskmanagment.registration.security.login;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

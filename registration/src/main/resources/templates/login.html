@@ -7,16 +7,26 @@
 </head>
 <body>
 <h1>Log In</h1>
-    <div th:if="${error}">
-        Unable to login. Check your username and password.
-    </div>
+
     <p>New here? Click <a th:href="@{/register}">here</a> to register.</p>
-    <form method="POST" th:action="@{/login}" id="loginForm">
-        <label for="username">Username: </label>
-        <input class="input" type="text" name="username" id="username" /><br/>
-        <label for="password">Password: </label>
-        <input class="input" type="password" name="password" id="password" /><br/>
-        <input type="submit" value="Login"/>
+    <form method="POST" th:action="@{/login}" th:object="${loginForm}">
+        <div>
+            <label for="username">Username: </label>
+            <input class="input" type="text" name="username" id="username" /><br/>
+
+        </div>
+        <div>
+            <label for="password">Password: </label>
+            <input class="input" type="password" name="password" id="password" /><br/>
+
+        </div>
+        <div>
+            <input type="submit" value="Login"/>
+        </div>
     </form>
+<br>
+<div class="validationError" th:if="${error}">
+    <span th:text="${error}"></span>
+</div>
 </body>
 </html>

@@ -1,11 +1,11 @@
-package taskmanagment.registration.security;
+package taskmanagment.registration.security.registration;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import taskmanagment.registration.User;
+import taskmanagment.registration.security.login.User;
 
 @Data
 public class RegistrationForm {
