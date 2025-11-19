@@ -20,13 +20,12 @@
             <input class="input" type="password" name="password" id="password" /><br/>
 
         </div>
+        <div class="validationError" th:if="${error}">
+            <span th:text="${error}"></span>
+        </div>
         <div>
             <input type="submit" value="Login"/>
         </div>
     </form>
-<br>
-<div class="validationError" th:if="${error}">
-    <span th:text="${error}"></span>
-</div>
 </body>
 </html>

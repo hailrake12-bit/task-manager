@@ -27,11 +27,10 @@ public class User implements UserDetails {
     private Integer id;
 
     @NotNull
-    @Size(min=3, max = 20, message = "Username can must be between 3 and 20 characters long")
+    @Column(unique = true)
     private final String username;
 
     @NotNull
-    @Size(min = 8, message = "Password must be at least 8 characters long")
     private final String password;
 
     @Override

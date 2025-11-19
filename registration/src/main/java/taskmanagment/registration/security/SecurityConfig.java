@@ -16,6 +16,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import taskmanagment.registration.security.login.LoginValidationFilter;
 
+import java.util.Optional;
+
 
 @Configuration
 public class SecurityConfig {
@@ -66,8 +68,8 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepo){
         return username -> {
-            User user = userRepo.findByUsername(username);
-            if(user != null) return user;
+            Optional<User> user = userRepo.findByUsername(username);
+            if(user.isPresent()) return user.get();
 
             throw new UsernameNotFoundException("User '" + username + "' not found");
         };

@@ -29,11 +29,13 @@
             <label>Password: </label>
             <input class="input" type="password" th:field="*{confirmation}"/><br/>
             <span class="validationError"
-                  th:if="${#fields.hasAnyErrors()}"
-                  th:each="err : ${#fields.allErrors()}" th:text="${err}"
+                  th:if="${#fields.hasErrors('passwordsMatching')}"
+                  th:errors="*{passwordsMatching}"
             >Name Error</span>
-
         <div/>
+        <div class="validationError" th:if="${error}">
+            <span th:text="${error}"></span>
+        </div>
         <input type="submit" value="Register"/>
     </div>
     </div>

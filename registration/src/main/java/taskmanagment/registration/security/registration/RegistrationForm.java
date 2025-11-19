@@ -22,7 +22,7 @@ public class RegistrationForm {
     private String confirmation;
 
     @AssertTrue(message = "Passwords must match")
-    private boolean isPasswordsMatching(){
+    public boolean isPasswordsMatching(){
         return (password != null && password.equals(confirmation));
     }
 

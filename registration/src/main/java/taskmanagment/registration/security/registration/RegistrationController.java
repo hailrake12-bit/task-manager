@@ -2,6 +2,7 @@ package taskmanagment.registration.security.registration;
 
 
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -32,10 +33,22 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String processRegistration(@ModelAttribute("registerForm") @Valid RegistrationForm form, Errors errors){
+    public String processRegistration(@ModelAttribute("registerForm") @Valid RegistrationForm form,
+                                      Errors errors, Model model){
         if(errors.hasErrors()) return "registration";
 
-        userRepo.save(form.toUser(passwordEncoder));
+        if (userRepo.findByUsername(form.getUsername()).isPresent()) {
+            model.addAttribute("error", "Username already in use");
+            return "registration";
+        }
+
+        try {
+            userRepo.save(form.toUser(passwordEncoder));
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("error", "Username already in use");
+            return "registration";
+        }
+
         return "redirect:/login";
     }
 

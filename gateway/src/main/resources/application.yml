@@ -1,0 +1,25 @@
+spring:
+  application.name: gateway
+
+  cloud:
+    gateway:
+      enabled:
+        true
+      routes:
+        - id: create-task
+          uri: http://localhost:8081
+          predicates:
+            - Path=/task
+
+        - id: static-resources
+          uri: http://localhost:8081
+          predicates:
+            - Path=/styles.css
+
+        - id: registration
+          uri: http://localhost:8082
+          predicates:
+            - Path=/login, /register
+
+server:
+  port: 8080
