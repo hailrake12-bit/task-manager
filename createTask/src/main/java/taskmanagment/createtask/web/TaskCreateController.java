@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.result.view.Rendering;
+import reactor.core.publisher.Mono;
 import taskmanagment.createtask.Entity.Task;
 import taskmanagment.createtask.data.TaskRepository;
 
@@ -17,23 +19,28 @@ public class TaskCreateController {
     private final TaskRepository taskRepository;
 
     @Autowired
-    public TaskCreateController(
-            TaskRepository taskRepository){
+    public TaskCreateController(TaskRepository taskRepository){
         this.taskRepository = taskRepository;
     }
 
     @GetMapping
-    public String showCreateForm(Model model){
-        model.addAttribute("task", new Task());
-        return "createTask";
+    public Mono<Rendering> showCreateForm(Model model){
+        //model.addAttribute("task", new Task());
+        return Mono.just(Rendering.view("createTask")
+                .modelAttribute("task", new Task())
+                .build());
     }
 
     @PostMapping
-    public String createTask(@ModelAttribute @Valid Task task, Errors errors){
+    public Mono<Rendering> createTask(@ModelAttribute @Valid Task task, Errors errors){
 
-        if(errors.hasErrors()) return "createTask";
+        if(errors.hasErrors()) {
+            return Mono.just(Rendering.view("createTask")
+                    .modelAttribute("task", task)
+                    .build());
+        }
 
-        taskRepository.save(task);
-        return "redirect:/task";
+        return taskRepository.save(task).
+                then(Mono.just(Rendering.redirectTo("/task").build()));
     }
 }

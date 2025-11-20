@@ -1,26 +1,21 @@
 package taskmanagment.createtask.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
-@Entity
+@Table
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Date createdAt = new Date();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @NotBlank(message = "Name can not be empty")
     private String name;

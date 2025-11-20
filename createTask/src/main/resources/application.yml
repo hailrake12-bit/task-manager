@@ -1,12 +1,13 @@
 spring:
-  application.name: createTask
-  datasource:
-    url: jdbc:postgresql://localhost:5433/task-manager
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5433/task-manager
     username: user
     password: password
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
+
+  application.name: createTask
+  sql:
+    init:
+      mode: always
+
 server:
   port: 8081
