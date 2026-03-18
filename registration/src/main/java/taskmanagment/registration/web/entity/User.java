@@ -1,4 +1,4 @@
-package taskmanagment.registration.security.login;
+package taskmanagment.registration.web.entity;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -17,9 +17,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @Data
-@Table
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-@RequiredArgsConstructor
+@Table("users")
 public class User implements UserDetails {
 
     @Id
@@ -27,10 +25,15 @@ public class User implements UserDetails {
 
     @NotNull
     @Column
-    private final String username;
+    private String username;
 
     @NotNull
-    private final String password;
+    private String password;
+
+    public User(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){

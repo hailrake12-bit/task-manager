@@ -9,12 +9,12 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityWebFilterChain securityFilterChain() {
-        ServerHttpSecurity http = ServerHttpSecurity.http();
+    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
         return http
-                .authorizeExchange(auth -> auth
-                        .anyExchange().permitAll()
-                )
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable) // 🔥 обязательно
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable) // 🔥 желательно
+                .authorizeExchange(auth -> auth.anyExchange().permitAll())
                 .build();
     }
 }

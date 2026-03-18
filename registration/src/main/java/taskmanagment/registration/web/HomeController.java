@@ -1,4 +1,4 @@
-package taskmanagment.registration;
+package taskmanagment.registration.web;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
