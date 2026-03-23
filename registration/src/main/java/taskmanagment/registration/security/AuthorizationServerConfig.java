@@ -6,13 +6,16 @@
     import com.nimbusds.jose.proc.SecurityContext;
     import org.springframework.context.annotation.Bean;
     import org.springframework.context.annotation.Configuration;
-    import org.springframework.security.config.Customizer;
+    import org.springframework.core.annotation.Order;
     import org.springframework.security.config.annotation.web.builders.HttpSecurity;
     import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+    import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
     import org.springframework.security.core.userdetails.User;
     import org.springframework.security.core.userdetails.UserDetails;
     import org.springframework.security.core.userdetails.UserDetailsService;
     import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+    import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+    import org.springframework.security.crypto.password.NoOpPasswordEncoder;
     import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.security.oauth2.core.AuthorizationGrantType;
     import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -35,19 +38,30 @@
     public class AuthorizationServerConfig {
 
         @Bean
-        public PasswordEncoder passwordEncoder(){
-            return new BCryptPasswordEncoder();
+        public PasswordEncoder passwordEncoder() {
+            return PasswordEncoderFactories.createDelegatingPasswordEncoder();
         }
 
         @Bean
+        @Order(1)
         public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
-            // Настраиваем Authorization Server
+            // Настройка Authorization Server
             OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+            return http.build();
+        }
 
+        @Bean
+        @Order(2)
+        public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
             http
-                    .formLogin(form -> form.
-                            loginPage("/login")
-                            .permitAll());
+                    .authorizeHttpRequests(auth -> auth
+                            .anyRequest().permitAll()
+                    )
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .formLogin(form -> form
+                            .loginPage("/login")  // GET /login возвращает HTML форму
+                            .permitAll()
+                    );
 
             return http.build();
         }
@@ -56,7 +70,7 @@
         public RegisteredClientRepository registeredClientRepository() {
             RegisteredClient client = RegisteredClient.withId(UUID.randomUUID().toString())
                     .clientId("gateway")
-                    .clientSecret("{noop}gateway-secret")
+                    .clientSecret("{noop}gateway-secret") // для теста можно оставить noop
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
@@ -68,15 +82,15 @@
             return new InMemoryRegisteredClientRepository(client);
         }
 
-        //http://localhost:8082/oauth2/authorize?response_type=code&client_id=gateway&redirect_uri=http://localhost:8082/login/oauth/authorize&scope=profile
-
         @Bean
-        public UserDetailsService users() {
-            UserDetails user = User.withDefaultPasswordEncoder()
+        public UserDetailsService users(PasswordEncoder encoder) {
+            UserDetails user = User.builder()
                     .username("user")
-                    .password("password")
+                    .password(encoder.encode("password"))
                     .roles("USER")
                     .build();
+
+            System.out.println("Stored password: " + user.getPassword());
 
             return new InMemoryUserDetailsManager(user);
         }
