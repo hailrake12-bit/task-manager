@@ -1,13 +1,19 @@
 spring:
   application.name: registration
-  r2dbc:
-    url: r2dbc:postgresql://localhost:5434/registration
+  datasource:
+    url: jdbc:postgresql://localhost:5434/registration
     username: user
     password: password
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://localhost:8082
+
 
 server:
   port: 8082

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import reactor.core.publisher.Mono;
 import taskmanagment.registration.data.UserRepository;
 import org.springframework.ui.Model;
 import taskmanagment.registration.web.login.UserService;
@@ -52,17 +51,17 @@ public class RegistrationController {
 //        return  Mono.just("redirect:/login");
 //    }
 
-    @PostMapping
-    public Mono<String> processRegistration(@ModelAttribute("registerForm") @Valid RegistrationForm form,
-                                            Errors errors, Model model) {
-        if (errors.hasErrors()) return Mono.just("registration");
-
-        return userService.createUser(form.toUser(passwordEncoder))
-                .map(user -> "redirect:/login")
-                .onErrorResume(DataIntegrityViolationException.class, e -> {
-                    model.addAttribute("error", "Username already in use");
-                    return Mono.just("registration");
-                });
-    }
+//    @PostMapping
+//    public Mono<String> processRegistration(@ModelAttribute("registerForm") @Valid RegistrationForm form,
+//                                            Errors errors, Model model) {
+//        if (errors.hasErrors()) return Mono.just("registration");
+//
+//        return userService.createUser(form.toUser(passwordEncoder))
+//                .map(user -> "redirect:/login")
+//                .onErrorResume(DataIntegrityViolationException.class, e -> {
+//                    model.addAttribute("error", "Username already in use");
+//                    return Mono.just("registration");
+//                });
+//    }
 
 }

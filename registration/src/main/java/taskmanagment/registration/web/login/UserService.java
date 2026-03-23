@@ -5,7 +5,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 import taskmanagment.registration.data.UserRepository;
 import taskmanagment.registration.web.entity.User;
 
@@ -31,20 +30,20 @@ public class UserService {
 //        return userRepository.findByUsername(username).isPresent();
 //    }
 
-    public Mono<User> createUser(User user) {
+    public User createUser(User user) {
         return userRepository.save(user);
     }
 
-    public Mono<User> authenticate(String username, String password) {
-        return userRepository.findByUsername(username)
-                .flatMap(user -> {
-                    if (passwordEncoder.matches(password, user.getPassword())) {
-                        return Mono.just(user);
-                    } else {
-                        return Mono.error(new BadCredentialsException("Bad credentials"));
-                    }
-                });
-    }
+//    public User authenticate(String username, String password) {
+//        return userRepository.findByUsername(username)
+//                .flatMap(user -> {
+//                    if (passwordEncoder.matches(password, user.getPassword())) {
+//                        return Mono.just(user);
+//                    } else {
+//                        return Mono.error(new BadCredentialsException("Bad credentials"));
+//                    }
+//                });
+//    }
 
 
 }
