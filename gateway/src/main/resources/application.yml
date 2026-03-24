@@ -1,9 +1,5 @@
 spring:
   application.name: gateway
-  security:
-    user:
-      name: ""
-      password: ""
 
   cloud:
     gateway:

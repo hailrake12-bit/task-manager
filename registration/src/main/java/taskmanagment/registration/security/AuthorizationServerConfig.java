@@ -13,9 +13,7 @@
     import org.springframework.security.core.userdetails.User;
     import org.springframework.security.core.userdetails.UserDetails;
     import org.springframework.security.core.userdetails.UserDetailsService;
-    import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
     import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-    import org.springframework.security.crypto.password.NoOpPasswordEncoder;
     import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.security.oauth2.core.AuthorizationGrantType;
     import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -59,7 +57,7 @@
                     )
                     .csrf(AbstractHttpConfigurer::disable)
                     .formLogin(form -> form
-                            .loginPage("/login")  // GET /login возвращает HTML форму
+                            .loginPage("/login")
                             .permitAll()
                     );
 
@@ -70,11 +68,11 @@
         public RegisteredClientRepository registeredClientRepository() {
             RegisteredClient client = RegisteredClient.withId(UUID.randomUUID().toString())
                     .clientId("gateway")
-                    .clientSecret("{noop}gateway-secret") // для теста можно оставить noop
+                    .clientSecret("{noop}gateway-secret")
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                    .redirectUri("http://localhost:8082/login/oauth/authorize")
+                    .redirectUri("http://localhost:8080/login/oauth/code/gateway")
                     .scope("profile")
                     .scope("email")
                     .build();
@@ -130,3 +128,5 @@
             return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
         }
     }
+
+    //http://localhost:8082/oauth2/authorize?response_type=code&client_id=gateway&redirect_uri=http://localhost:8080/login/oauth/code/gateway&scope=profile
