@@ -21,5 +21,28 @@ spring:
           predicates:
             - Path=/login, /register
 
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway:
+            client-id: gateway
+            client-secret: gateway-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/gateway
+            scope: profile
+        provider:
+          gateway:
+            authorization-uri: http://localhost:8082/oauth2/authorize
+            token-uri: http://localhost:8082/oauth2/token
+            ##user-info-uri: http://localhost:8082/userinfo
+            jwk-set-uri: http://localhost:8082/oauth2/jwks
+            ##user-name-attribute: sub
+
 server:
   port: 8080
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: TRACE
