@@ -1,4 +1,4 @@
-package taskmanagment.registration.web.entity;
+package taskmanagment.registration.data.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
+@Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class User implements UserDetails {
 
@@ -37,6 +39,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 }

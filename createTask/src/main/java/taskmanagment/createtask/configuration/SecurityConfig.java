@@ -2,6 +2,7 @@ package taskmanagment.createtask.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
@@ -9,12 +10,16 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable) // 🔥 обязательно
-                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable) // 🔥 желательно
-                .authorizeExchange(auth -> auth.anyExchange().permitAll())
+                .csrf(csrf -> csrf.disable())
+                .authorizeExchange(auth -> auth
+                        .pathMatchers("/styles.css").permitAll()
+                        .anyExchange().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(Customizer.withDefaults())
+                )
                 .build();
     }
 }

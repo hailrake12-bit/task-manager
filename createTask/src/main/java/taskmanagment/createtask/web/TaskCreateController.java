@@ -1,8 +1,9 @@
 package taskmanagment.createtask.web;
 
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,7 @@ public class TaskCreateController {
     }
 
     @GetMapping
-    public Mono<Rendering> showCreateForm(/*Model model*/){
-        //model.addAttribute("task", new Task());
+    public Mono<Rendering> showCreateForm(){
         return Mono.just(Rendering.view("createTask")
                 .modelAttribute("task", new Task())
                 .build());

@@ -11,12 +11,6 @@
     import org.springframework.security.config.Customizer;
     import org.springframework.security.config.annotation.web.builders.HttpSecurity;
     import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-    import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-    import org.springframework.security.core.userdetails.User;
-    import org.springframework.security.core.userdetails.UserDetails;
-    import org.springframework.security.core.userdetails.UserDetailsService;
-    import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-    import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.security.oauth2.core.AuthorizationGrantType;
     import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
     import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -25,7 +19,6 @@
     import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
     import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
     import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
-    import org.springframework.security.provisioning.InMemoryUserDetailsManager;
     import org.springframework.security.web.SecurityFilterChain;
     import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
     import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -41,15 +34,13 @@
     public class AuthorizationServerConfig {
 
         @Bean
-        public PasswordEncoder passwordEncoder() {
-            return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        }
-
-        @Bean
         @Order(1)
         public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
 
             OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+
+            http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                    .oidc(Customizer.withDefaults());
 
             http.exceptionHandling(exceptions -> exceptions
                     .defaultAuthenticationEntryPointFor(
@@ -57,23 +48,6 @@
                             new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                     )
             );
-
-            return http.build();
-        }
-
-        @Bean
-        @Order(2)
-        public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-            http
-                    .authorizeHttpRequests(auth -> auth
-                            .requestMatchers("/userinfo").authenticated()
-                            .anyRequest().permitAll()
-                    )
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .formLogin(form -> form
-                            .loginPage("/login")
-                            .permitAll()
-                    );
 
             return http.build();
         }
@@ -87,24 +61,10 @@
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                     .redirectUri("http://localhost:8080/login/oauth2/code/gateway")
-                    .scope("profile")
-                    .scope("email")
+                    .scope("openid")
                     .build();
 
             return new InMemoryRegisteredClientRepository(client);
-        }
-
-        @Bean
-        public UserDetailsService users(PasswordEncoder encoder) {
-            UserDetails user = User.builder()
-                    .username("user")
-                    .password(encoder.encode("password"))
-                    .roles("USER")
-                    .build();
-
-            //System.out.println("Stored password: " + user.getPassword());
-
-            return new InMemoryUserDetailsManager(user);
         }
 
         @Bean
@@ -142,5 +102,3 @@
             return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
         }
     }
-
-    //http://localhost:8082/oauth2/authorize?response_type=code&client_id=gateway&redirect_uri=http://localhost:8080/login/oauth2/code/gateway&scope=profile
